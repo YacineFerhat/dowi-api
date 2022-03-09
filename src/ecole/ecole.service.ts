@@ -40,6 +40,21 @@ export class EcoleService {
     return await this.ecoleModel.findOne({ email: email });
   };
 
+  updateFormations = async (
+    add: boolean,
+    formationId: string,
+    ecoleId: string,
+  ) => {
+    if (add) {
+      const ecole = await this.findOne(ecoleId);
+      const newFormations = [...ecole.formations, formationId];
+      return await this.ecoleModel.updateOne(
+        { _id: ecoleId },
+        { formations: newFormations },
+      );
+    }
+  };
+
   findAll = async () => {
     return await this.ecoleModel.find();
   };

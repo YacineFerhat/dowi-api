@@ -5,18 +5,18 @@ export class Blog extends Document {
   @Prop()
   name: string;
   @Prop()
-  url: string;
-  @Prop()
-  title: string;
-  @Prop()
   author: string;
   @Prop()
-  picture: string;
+  imageUrl: string;
   @Prop()
   categorie: string;
   @Prop()
   readTime: string;
   @Prop()
-  description: string;
+  editor: string;
+  @Prop({ default: Date.now(), type: Date })
+  date: Date;
+  @Prop({ default: true })
+  active: boolean;
 }
 export const BlogSchema = SchemaFactory.createForClass(Blog);

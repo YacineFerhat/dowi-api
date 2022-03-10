@@ -6,6 +6,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Formation } from './entities/formation.entity';
 import { EcoleService } from 'src/ecole/ecole.service';
+
 @Injectable()
 export class FormationService {
   constructor(

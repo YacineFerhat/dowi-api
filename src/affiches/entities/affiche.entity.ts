@@ -6,5 +6,7 @@ export class Affiche extends Document {
   name: string;
   @Prop()
   url: string;
+  @Prop()
+  imageUrl: string;
 }
 export const AfficheSchema = SchemaFactory.createForClass(Affiche);

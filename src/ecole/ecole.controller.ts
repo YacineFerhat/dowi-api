@@ -47,6 +47,11 @@ export class EcoleController {
     return this.ecoleService.findByAlias(alias);
   }
 
+  @Get('auth/:id')
+  findByAuthId(@Param('id') id: string) {
+    return this.ecoleService.findByAuthId(id);
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateEcoleDto: UpdateEcoleDto) {
     return this.ecoleService.update(+id, updateEcoleDto);
@@ -55,6 +60,11 @@ export class EcoleController {
   @Put('validate')
   validate(@Body() input: validateEcoleDto) {
     return this.ecoleService.validate(input);
+  }
+
+  @Put('premium/:id')
+  premium(@Param('id') id: string) {
+    return this.ecoleService.premium(id);
   }
 
   @Put('updateState/:id')

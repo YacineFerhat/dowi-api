@@ -16,6 +16,8 @@ export class Ecole extends Document {
   @Prop()
   startDate: string;
   @Prop()
+  alias: string;
+  @Prop()
   picture?: string;
   @Prop({ default: type.Standard })
   status: type;
@@ -23,9 +25,13 @@ export class Ecole extends Document {
   state: string;
   @Prop({ default: false })
   activated: boolean;
-  @Prop({ type: SchemaTypes.Array, ref: 'formation' })
+  @Prop({ default: true })
+  active: boolean;
+  @Prop({ default: false })
+  premium: boolean;
+  @Prop({ type: SchemaTypes.Array, ref: 'formations' })
   formations?: Array<Types.ObjectId>;
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'auth' })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'auths' })
   auth_id: Types.ObjectId;
 }
 export const EcoleSchema = SchemaFactory.createForClass(Ecole);

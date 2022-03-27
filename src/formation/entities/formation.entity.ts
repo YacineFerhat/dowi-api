@@ -18,13 +18,15 @@ export class Formation extends Document {
   certified: boolean;
   @Prop({ default: true })
   active: boolean;
+  @Prop({ default: false })
+  top: boolean;
   @Prop({ default: 0 })
   participants: number;
   @Prop()
   categorie: string;
   @Prop()
   imageUrl: string;
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'ecole' })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'ecoles' })
   ecole_id: Types.ObjectId;
 }
 export const FormationSchema = SchemaFactory.createForClass(Formation);

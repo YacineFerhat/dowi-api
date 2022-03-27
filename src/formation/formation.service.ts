@@ -17,19 +17,23 @@ export class FormationService {
 
   async create(createFormationDto: any, files?) {
     const imageUrl = await saveImage(files[0], 'someId', 'PledgeLevel');
-    const ecole_id = '6227532568d6d741d69bfbd4';
+    const ecole = await this.ecoleService.findByAuthId(
+      createFormationDto.auth_id,
+    );
     const formation = new this.formationModel({
       ...createFormationDto,
-      ecole_id,
+      ecole_id: ecole._id,
+      participants: 0,
       imageUrl,
     });
     formation.save();
-    await this.ecoleService.updateFormations(true, formation._id, ecole_id);
+    await this.ecoleService.updateFormations(true, formation._id, ecole._id);
     return true;
   }
 
-  findByEcole = async (ecoleId: string) => {
-    return await this.formationModel.find({ ecole_id: ecoleId });
+  findByEcole = async (authId: string) => {
+    const ecole = await this.ecoleService.findByAuthId(authId);
+    return await this.formationModel.find({ ecole_id: ecole._id });
   };
 
   updateState = async (id: string) => {
@@ -40,12 +44,37 @@ export class FormationService {
     );
   };
 
-  findAll() {
-    return `This action returns all formation`;
-  }
+  updateTop = async (id: string) => {
+    const formation: Formation = await this.findOne(id);
+    return await this.formationModel.updateOne(
+      { _id: formation._id },
+      { top: !formation.top },
+    );
+  };
+
+  findAll = async () => {
+    return await this.formationModel.find();
+  };
 
   findOne = async (id: string) => {
-    return await this.formationModel.findOne({ _id: id });
+    const formation = await this.formationModel.findOne({ _id: id });
+    const ecole = await this.ecoleService.findOne(
+      formation.ecole_id.toString(),
+    );
+    const obj = { formation, ecole };
+    return formation;
+  };
+
+  topFormations = async () => {
+    return await this.formationModel.find({ top: true }).limit(4);
+  };
+
+  count = async () => {
+    return await this.formationModel.countDocuments();
+  };
+
+  findMultiple = async (ids: any) => {
+    return await this.formationModel.find({ _id: { $in: ids } });
   };
 
   update(id: number, updateFormationDto: UpdateFormationDto) {

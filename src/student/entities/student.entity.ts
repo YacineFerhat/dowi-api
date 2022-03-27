@@ -19,13 +19,17 @@ export class Student extends Document {
   gender: gender;
   @Prop()
   status: status;
-  @Prop({ type: SchemaTypes.Array, ref: 'formation' })
+  @Prop({ type: SchemaTypes.Array, ref: 'formations' })
   formations?: Array<Types.ObjectId>;
   @Prop()
   searchField: string[];
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'auth' })
+  @Prop({ type: SchemaTypes.ObjectId, ref: 'auths' })
   auth_id: Types.ObjectId;
   @Prop()
   alias: string;
+  @Prop({ default: false })
+  banned: boolean;
+  @Prop({ default: false })
+  blocked: boolean;
 }
 export const StudentSchema = SchemaFactory.createForClass(Student);

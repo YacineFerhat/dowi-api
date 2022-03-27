@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { MailService } from 'src/mail/mail.service';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import { UpdateAdminDto } from './dto/update-admin.dto';
@@ -8,7 +8,7 @@ import { Model } from 'mongoose';
 import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
-export class AdminService {
+export class AdminService implements OnModuleInit {
   constructor(
     @InjectModel(Admin.name)
     private adminModel: Model<Admin>,
@@ -16,9 +16,39 @@ export class AdminService {
     private authService: AuthService,
   ) {}
 
+  async onModuleInit() {
+    const admin = await this.checkEmail(process.env.MAIL_ADMIN);
+    if (admin === null) {
+      await this.createSuperAdmin(
+        process.env.MAIL_ADMIN,
+        process.env.MDP_ADMIN,
+      );
+    }
+  }
+
+  createSuperAdmin = async (email: string, password: string) => {
+    const result = await this.authService.create({
+      email,
+      grade: 'super admin',
+      name: 'Lilia',
+      password,
+    });
+    if (result !== "L'adresse Email est déjà attribuée") {
+      const admin = new this.adminModel({
+        email,
+        grade: 'super admin',
+        name: 'Lilia',
+        auth_id: result.id,
+        alias: result.alias,
+      });
+      admin.save();
+      return result.token;
+    }
+    return "L'adresse Email est déjà attribuée";
+  };
+
   create = async (createAdminDto: CreateAdminDto) => {
     const { email, grade, name } = createAdminDto;
-    console.log(grade);
     const result = await this.authService.create({
       email,
       grade,

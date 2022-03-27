@@ -4,6 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateAffichDto } from './dto/create-affiche.dto';
 import { UpdateAffichDto } from './dto/update-affich.dto';
 import { Affiche } from './entities/affiche.entity';
+import saveImage from 'src/utils/saveImage';
 
 @Injectable()
 export class AffichesService {
@@ -11,11 +12,19 @@ export class AffichesService {
     @InjectModel(Affiche.name)
     private afficheModel: Model<Affiche>,
   ) {}
-  create(createAffichDto: CreateAffichDto) {
-    const affiche = new this.afficheModel(createAffichDto);
+
+  create = async (createAffichDto: any, files?) => {
+    const imageUrl = await saveImage(files[0], 'someId', 'Blog');
+    const affiche = new this.afficheModel({ ...createAffichDto, imageUrl });
     affiche.save();
-    return 'Affiche créé';
-  }
+    console.log(affiche);
+    if (affiche) return true;
+    else false;
+  };
+
+  front = async () => {
+    return await this.afficheModel.find().limit(1);
+  };
 
   findAll = async () => {
     return await this.afficheModel.find();

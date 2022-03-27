@@ -16,5 +16,6 @@ import { EcoleModule } from 'src/ecole/ecole.module';
     ]),
     EcoleModule,
   ],
+  exports: [FormationService],
 })
 export class FormationModule {}

@@ -26,6 +26,11 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
+  @Post('reset')
+  reset(@Body() input: any) {
+    return this.authService.reset(input);
+  }
+
   @Get()
   findAll() {
     return this.authService.findAll();
@@ -33,7 +38,7 @@ export class AuthController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.authService.findOne(+id);
+    return this.authService.findOne(id);
   }
 
   @Get('alias/:alias')

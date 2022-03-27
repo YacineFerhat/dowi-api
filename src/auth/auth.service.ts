@@ -18,6 +18,18 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  reset = async (input: any) => {
+    const { password, id, confirmPassword } = input;
+    if (password === confirmPassword) {
+      await this.authModel.findOneAndUpdate(
+        { _id: id },
+        { password: await bcrypt.hash(password, 10) },
+      );
+      return true;
+    }
+    return false;
+  };
+
   async create(createAuthDto: CreateAuthDto) {
     const { email, grade } = createAuthDto;
     const userFound = await this.checkEmail(createAuthDto.email);
@@ -44,27 +56,29 @@ export class AuthService {
     if (grade === 'student') await this.mailService.studentCreation(email);
     if (
       grade === 'admin' ||
+      grade === 'sale' ||
       grade === 'marketing supervisor' ||
-      grade === 'sale supervisor'
+      grade === 'sale supervisor' ||
+      grade === 'super admin'
     )
       await this.mailService.adminCreation(email, password);
-
+    const id = auth._id;
     const token = this.jwtService.sign(
-      { email, grade, alias, createdAt: new Date().getTime() },
+      { email, grade, alias, createdAt: new Date().getTime(), id },
       { expiresIn: '1d' },
     );
-    const id = auth._id;
     return { ...auth, id, token, alias };
   }
 
   login = async (input: LoginAuthDto) => {
     const { email, password } = input;
-    console.log(email, password);
     const auth = await this.findByEmail(email);
     if (auth && (await bcrypt.compare(password, auth.password))) {
       const { email, grade, alias } = auth.toObject();
+      const id = auth._id;
       const token = this.jwtService.sign(
         {
+          id,
           email,
           alias,
           grade,
@@ -72,6 +86,7 @@ export class AuthService {
         },
         { expiresIn: '1d' },
       );
+      console.log(token);
       return token;
     }
     return undefined;
@@ -97,9 +112,9 @@ export class AuthService {
     return `This action returns all auth`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  findOne = async (id: string) => {
+    return await this.authModel.findOne({ _id: id });
+  };
 
   update(id: number, updateAuthDto: UpdateAuthDto) {
     return `This action updates a #${id} auth`;

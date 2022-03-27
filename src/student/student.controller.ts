@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { StudentService } from './student.service';
 import { CreateStudentDto } from './dto/create-student.dto';
@@ -23,6 +24,16 @@ export class StudentController {
   @Post('contactUs')
   contactUs(@Body() input: any) {
     return this.studentService.contactUs(input);
+  }
+
+  @Post('commander')
+  commander(@Body() input: any) {
+    return this.studentService.commander(input);
+  }
+
+  @Post('contactSchool')
+  contactSchool(@Body() input: any) {
+    return this.studentService.contactSchool(input);
   }
 
   @Get()
@@ -43,6 +54,11 @@ export class StudentController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
     return this.studentService.update(+id, updateStudentDto);
+  }
+
+  @Put('/ban/:id')
+  ban(@Param('id') id: string) {
+    return this.studentService.ban(id);
   }
 
   @Delete(':id')

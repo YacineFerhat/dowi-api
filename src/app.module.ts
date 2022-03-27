@@ -13,6 +13,8 @@ import { PartenairesModule } from './partenaires/partenaires.module';
 import { BlogModule } from './blog/blog.module';
 import { AuthModule } from './auth/auth.module';
 import { ChangelogModule } from './changelog/changelog.module';
+import { MetricsModule } from './metrics/metrics.module';
+import { BannedModule } from './banned/banned.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { ChangelogModule } from './changelog/changelog.module';
     BlogModule,
     AuthModule,
     ChangelogModule,
+    MetricsModule,
+    BannedModule,
   ],
   controllers: [AppController],
   providers: [AppService],

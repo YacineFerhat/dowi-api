@@ -29,9 +29,19 @@ export class FormationController {
     return this.formationService.create(data, images);
   }
 
+  @Get('ecole/:input')
+  findByEcole(@Param('input') input: string) {
+    return this.formationService.findByEcole(input);
+  }
+
   @Get()
   findAll() {
     return this.formationService.findAll();
+  }
+
+  @Get('top')
+  topFormations() {
+    return this.formationService.topFormations();
   }
 
   @Get(':id')
@@ -39,14 +49,14 @@ export class FormationController {
     return this.formationService.findOne(id);
   }
 
-  @Get('findByEcole/:ecole_id')
-  findByEcole(@Param('ecole_id') ecole_id: string) {
-    return this.formationService.findByEcole(ecole_id);
-  }
-
   @Put('updateState/:id')
   updateState(@Param('id') id: string) {
     return this.formationService.updateState(id);
+  }
+
+  @Put('updateTop/:id')
+  updateTop(@Param('id') id: string) {
+    return this.formationService.updateTop(id);
   }
 
   @Patch(':id')

@@ -28,7 +28,8 @@ export class EcoleService {
     if (result !== "L'adresse Email est déjà attribuée") {
       const ecole = new this.ecoleModel({
         ...createEcoleDto,
-        auth_id: result._id,
+        auth_id: result.id,
+        alias: result.alias,
       });
       ecole.save();
       return 'Ecole créé';
@@ -59,6 +60,18 @@ export class EcoleService {
     return await this.ecoleModel.find();
   };
 
+  count = async () => {
+    return await this.ecoleModel.countDocuments();
+  };
+
+  premium = async (id: string) => {
+    const ecole = await this.findOne(id);
+    return await this.ecoleModel.findByIdAndUpdate(
+      { _id: id },
+      { premium: !ecole.premium },
+    );
+  };
+
   validate = async (input: validateEcoleDto) => {
     const token = await this.authService.login(input);
     if (token) {
@@ -73,6 +86,12 @@ export class EcoleService {
 
   updateState = async (id: string) => {
     const ecole: Ecole = await this.findOne(id);
+    return await this.ecoleModel.findOneAndUpdate(
+      { _id: id },
+      { active: !ecole.active },
+    );
+
+    /*
     if (ecole.status === 'Premium')
       return await this.ecoleModel.updateOne(
         { _id: ecole._id },
@@ -81,12 +100,15 @@ export class EcoleService {
     return await this.ecoleModel.updateOne(
       { _id: ecole._id },
       { status: 'Premium' },
-    );
+    );*/
   };
 
   findByAlias = async (alias: string) => {
-    console.log(alias);
     return await this.ecoleModel.findOne({ alias: alias });
+  };
+
+  findByAuthId = async (authId: string) => {
+    return await this.ecoleModel.findOne({ auth_id: authId });
   };
 
   findOne = async (id: string) => {

@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Student, StudentSchema } from './entities/student.entity';
 import { MailModule } from 'src/mail/mail.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { FormationModule } from 'src/formation/formation.module';
 @Module({
   controllers: [StudentController],
   providers: [StudentService],
@@ -17,6 +18,8 @@ import { AuthModule } from 'src/auth/auth.module';
     ]),
     MailModule,
     AuthModule,
+    FormationModule,
   ],
+  exports: [StudentService],
 })
 export class StudentModule {}

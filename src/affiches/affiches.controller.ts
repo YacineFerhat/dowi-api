@@ -6,23 +6,36 @@ import {
   Patch,
   Param,
   Delete,
+  UploadedFiles,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AffichesService } from './affiches.service';
 import { CreateAffichDto } from './dto/create-affiche.dto';
 import { UpdateAffichDto } from './dto/update-affich.dto';
+import { FilesInterceptor } from '@nestjs/platform-express/multer/interceptors';
 
 @Controller('affiches')
 export class AffichesController {
   constructor(private readonly affichesService: AffichesService) {}
 
   @Post()
-  create(@Body() createAffichDto: CreateAffichDto) {
-    return this.affichesService.create(createAffichDto);
+  @UseInterceptors(FilesInterceptor('image'))
+  async create(
+    @Body() createFormationDto: { data: string },
+    @UploadedFiles() images?: Array<Express.Multer.File>,
+  ) {
+    const data = JSON.parse(createFormationDto.data);
+    return this.affichesService.create(data, images);
   }
 
   @Get()
   findAll() {
     return this.affichesService.findAll();
+  }
+
+  @Get('front')
+  front() {
+    return this.affichesService.front();
   }
 
   @Get(':id')

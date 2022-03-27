@@ -47,12 +47,12 @@ export class BlogService {
 
   filterBlog = async (filters: { tags: string[]; input: string }) => {
     const { tags, input } = filters;
-    if (input !== '' && tags.length === 0)
+    if (input !== '' && tags?.length === 0)
       return await this.blogModel.find({
         name: { $regex: `.*${input}.*` },
         active: true,
       });
-    if (input === '' && tags.length > 0)
+    if (input === '' && tags?.length > 0)
       return await this.blogModel.find({
         categorie: { $in: tags },
         active: true,

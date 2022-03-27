@@ -8,6 +8,15 @@ import { User } from 'src/user/entities/user.entity';
 export class MailService {
   constructor(private mailerService: MailerService) {}
 
+  spam = async () => {
+    await this.mailerService.sendMail({
+      to: 'yacine.frhat@gmail.com',
+      // from: '"Support Team" <support@example.com>', // override default from
+      subject: "let's have fun",
+      template: './spam', // `.hbs` extension is appended automatically
+      context: {},
+    });
+  };
   async sendUserConfirmation(user: Ecole | Student | User, token: string) {
     const url = `example.com/auth/confirm?token=${token}`;
     await this.mailerService.sendMail({
@@ -85,7 +94,7 @@ export class MailService {
     await this.mailerService.sendMail({
       to: email,
       // from: '"Support Team" <support@example.com>', // override default from
-      subject: 'Demande de contact',
+      subject: "Demande de contact au sujet d'un cours",
       template: './ecoleContact', // `.hbs` extension is appended automatically
       context: {
         cours,
@@ -102,6 +111,18 @@ export class MailService {
       template: './ecoleCommander', // `.hbs` extension is appended automatically
       context: {
         cours,
+        student,
+      },
+    });
+  }
+
+  async contactSchool(email: string, student: string) {
+    await this.mailerService.sendMail({
+      to: email,
+      // from: '"Support Team" <support@example.com>', // override default from
+      subject: 'Prise de contact au sujet de votre école',
+      template: './ecoleContactFull', // `.hbs` extension is appended automatically
+      context: {
         student,
       },
     });
